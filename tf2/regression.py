@@ -39,16 +39,29 @@ class SeqModel:
 
     def execute(self):
         (x, y) = self.make_random_data()
-        x_train, y_train = X[:150], y[:150]
-        x_test, y_test = X[:150], y[:150]
+        x_train, y_train = x[:150], y[:150]
+        x_test, y_test = x[:150], y[:150]
         self.model = tf.keras.Sequential()
         self.model.add(tf.keras.layers.Dense(units=1, input_dim=1))
         self.model.compile(optimizer='sgd', loss = 'mse')
         self.model.save('./data/simple_model.h5')
 
     def load_model(self):
-        
+        (x, y) = self.make_random_data()
+        x_train, y_train = x[:150], y[:150]
+        x_train, y_train = x[:150], y[:150] ################
+        load_model = tf.keras.models.load_model('./data/simple_model.h5')
+        history = load_model.fit(x_train, y_train, epochs = 300, validation_split = 0.3)    ##############
+        epochs = np.arange(1, 300 + 1)
+        plt.plot(epochs, history.history['loss'], label = 'Training loss')
+        plt.xlabel('Epochs')
+        plt.ylabel('Loss')
+        plt.legend()
+        plt.show()
+
 
 if __name__ == '__main__':
     m = SeqModel()
-    print(m.create_model())
+    m.create_model()
+    m.execute()
+    m.load_model()
